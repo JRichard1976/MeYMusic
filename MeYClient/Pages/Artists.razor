@@ -1,0 +1,43 @@
+﻿
+@using MeYClient.Models;
+@inject HttpClient Http
+@page "/Artists/{GenreId}"
+@inject NavigationManager UriHelper
+<PageTitle>Artist List by Genres</PageTitle>
+  <div class="container">
+    <div class="row">
+<div class="col-md-6">
+    @foreach (var artist in ListArtists)
+    {
+                <div class="card-block">
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src=@artist.Image alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">@artist.Name</h5>
+                    <p class="card-text">@artist.Notes</p>
+                            <a href=@artist.WikiLink target="_blank">Go to wiki</a>
+                    <p></p>
+                    <a href="#" class="btn btn-primary">View Album</a>
+                </div>
+        </div>*
+                </div>
+    }
+</div>
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public string GenreId { get; set; }
+    private IEnumerable<MyArtist> ListArtists = new List<MyArtist>();
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        ListArtists = await Http.GetFromJsonAsync<IEnumerable<MyArtist>>($"MyArtists/GetMyArtistByGenre/{GenreId}");
+    }
+}
